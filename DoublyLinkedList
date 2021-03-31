@@ -1,0 +1,174 @@
+public class DoublyLinkedList<T> {
+	static Node<Object> head;
+
+	static class Node<T> {
+		T data;
+		Node<T> previous;
+		Node<T> next;
+
+		Node(T data) {
+			this.data = data;
+		}
+	}
+
+	// Adding node at the beginning of the list
+	public static void add_First(Object new_data)
+
+	{
+		Node<Object> new_node = new Node<Object>(new_data);
+		new_node.next = head;
+		new_node.previous = null;
+		if (head != null) {
+			head.previous = new_node;
+		}
+		head = new_node;
+
+	}
+
+	// Adding node at the last of the list
+	public static void add_Last(Object new_data) {
+		Node<Object> new_node = new Node<Object>(new_data);
+		Node last = head;
+		new_node.next = null;
+		if (head == null) {
+			new_node.previous = null;
+			head = new_node;
+		}
+		while (last.next != null) {
+			last = last.next;
+		}
+		last.next = new_node;
+		new_node.previous = last;
+
+	}
+	// Adding node after particular index in the list
+	public static void addAtIndex(Object new_data, int index) {
+		Node<Object> new_node = new Node<Object>(new_data);
+		Node current = head;
+		if (index == 0) {
+			add_First(new_data);
+		}
+		if (index == size()) {
+			add_Last(new_data);
+		} else {
+			for (int j = 0; j < index && current.next != null; j++) {
+				current = current.next;
+			}
+			new_node.next = current;
+			current.previous.next = new_node;
+			new_node.previous = current.previous;
+			current.previous = new_node;
+		}
+	}
+	// Calculating size of the list
+	public static int size() {
+		int count = 0;
+		Node node = head.next;
+		while (node != null) {
+			++count;
+			node = node.next;
+		}
+		return count;
+	}
+	// Deleting node from  the beginning of the list
+	public static void del_first(Node del) {
+		if (head == null || del == null) {
+			return;
+		}
+		if (head == del) {
+			head = head.next;
+			head.previous = null;
+		}
+	}
+
+	// Deleting node from  the last of the list
+	public static void del_last() {
+		Node temp = head;
+		if (head == null) {
+			return;
+		} else {
+			while (temp.next != null) {
+				temp = temp.next;
+			}
+			temp.previous.next = null;
+		}
+	}
+
+	// Deleting node after  the particular index from  list
+	public static void delIndex(int index) {
+		if (head == null || index <= 0) {
+			return;
+		}
+		Node current = head;
+		int i;
+		for (i = 1; current != null && i < index; i++) {
+			current = current.next;
+		}
+		if (current == null) {
+			return;
+		} else {
+			if (current == head) {
+				del_first(current);
+			} else if (index == size()) {
+				del_last();
+			} else {
+				current.previous.next = current.next;
+				current.next.previous = current.previous;
+			}
+		}
+	}
+
+	// Search node in the list
+	public static int findNode(Node<Object> head, int x) {
+		Node temp = head;
+		int pos = 0;
+		while ((Integer) temp.data != x && temp.next != null) {
+			pos++;
+			temp = temp.next;
+		}
+		if ((Integer) temp.data != x) {
+			return -1;
+		}
+		return pos + 1;
+	}
+
+	// printing the list
+	public static void printList(Node head)
+
+	{
+		Node temp = head;
+		while (temp != null) {
+			System.out.print(temp.data);
+			temp = temp.next;
+		}
+
+	}
+
+	public static void main(String[] args) {
+		DoublyLinkedList<Object> dll = new DoublyLinkedList<Object>();
+
+		dll.add_First(1);
+		dll.add_First(2);
+		dll.add_First(3);
+		dll.add_Last(5);
+		dll.add_Last(6);
+		dll.add_Last(7);
+		dll.add_Last(8);
+		dll.add_Last(9);
+		dll.addAtIndex(10, 1);
+		dll.addAtIndex(16, 5);
+		dll.del_first(head);
+		dll.del_last();
+
+		dll.delIndex(5);
+		printList(head);
+
+		int pos = dll.findNode(head, 5);
+		if (pos == -1) {
+			System.out.println("Node not found");
+		} else {
+			System.out.println("Node found at :" + pos);
+		}
+
+	}
+}
